@@ -3,7 +3,10 @@ let startTime;
 let elapsedTime = 0;
 let running = false;
 
-
+const display = document.getElementById('display');
+const startBtn = document.getElementById('startBtn');
+const stopBtn = document.getElementById('stopBtn');
+const resetBtn = document.getElementById('resetBtn');
 
 function formatTime(ms) {
     let minutes = String(Math.floor(ms / 60000)).padStart(2, '0');
@@ -17,20 +20,25 @@ function updateDisplay() {
 }
 
 function start() {
-    startTime = Date.now() - elapsedTime;
-    timer = setInterval(() => {
-        elapsedTime = Date.now() - startTime;
-        updateDisplay();
-    }, 10);
-    running = true;
-
+    if (!running) {
+        startTime = Date.now() - elapsedTime;
+        timer = setInterval(() => {
+            elapsedTime = Date.now() - startTime;
+            updateDisplay();
+        }, 10);
+        running = true;
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+    }
 }
 
 function stop() {
-    clearInterval(timer);
-    running = false;
-    startBtn.disabled = false;
-    stopBtn.disabled = true;
+    if (running) {
+        clearInterval(timer);
+        running = false;
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+    }
 }
 
 function reset() {
@@ -42,8 +50,11 @@ function reset() {
     stopBtn.disabled = true;
 }
 
+
 startBtn.addEventListener('click', start);
 stopBtn.addEventListener('click', stop);
 resetBtn.addEventListener('click', reset);
 
+
 updateDisplay();
+
